@@ -78,10 +78,23 @@ namespace UnzipCSharp
             {
                 FileInfo zip_file_info = new FileInfo(zip_file);
                 Thread.Sleep(3000);
+                int tries = 0;
+                bool move_on = false;
                 while (IsFileLocked(zip_file_info))
                 {
                     Console.WriteLine("Waiting for file to be fully transferred...");
+                    tries += 1;
                     Thread.Sleep(3000);
+                    if (tries > 5)
+                    {
+                        move_on = true;
+                        break;
+                    }
+                }
+                if (move_on)
+                {
+                    Console.WriteLine("Taking too long, will come back and try again...");
+                    continue;
                 }
                 string file_name = Path.GetFileName(zip_file);
                 string output_dir = Path.Join(Path.GetDirectoryName(zip_file), file_name.Substring(0, file_name.Length - 4));
