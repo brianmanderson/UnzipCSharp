@@ -2,6 +2,7 @@
 using System.Threading;
 using System.IO;
 using System.IO.Compression;
+using System.Collections.Generic;
 
 namespace UnzipCSharp
 {
@@ -46,7 +47,7 @@ namespace UnzipCSharp
     class Program
     {
         public bool folder_changed;
-        static string[] file_paths = { @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
+        static List<string> default_file_paths = new List<string> { @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
         static bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;
@@ -121,6 +122,32 @@ namespace UnzipCSharp
             Console.WriteLine("Running...");
             while (true)
             {
+                List<string> file_paths = new List<string> { };
+                foreach (string file_path in default_file_paths)
+                {
+                    file_paths.Add(file_path);
+                }
+
+                string file_paths_file = Path.Join(".", $"FilePaths.txt");
+                if (File.Exists(file_paths_file))
+                {
+                    try
+                    {
+                        string all_file_paths = File.ReadAllText(file_paths_file);
+                        foreach (string file_path in all_file_paths.Split("\r\n"))
+                        {
+                            if (!file_paths.Contains(file_path))
+                            {
+                                file_paths.Add(file_path);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Couldn't read the FilePaths.txt file...");
+                        Thread.Sleep(3000);
+                    }
+                }
                 // First lets unzip the life images
                 foreach (string file_path in file_paths)
                 {
