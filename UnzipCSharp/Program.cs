@@ -47,7 +47,7 @@ namespace UnzipCSharp
     class Program
     {
         public bool folder_changed;
-        static List<string> default_file_paths = new List<string> { @"C:\Users\b5anderson\Test", @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
+        static List<string> default_file_paths = new List<string> { @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
         static bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;
