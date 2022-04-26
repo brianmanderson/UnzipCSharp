@@ -47,7 +47,7 @@ namespace UnzipCSharp
     class Program
     {
         public bool folder_changed;
-        static List<string> default_file_paths = new List<string> { @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
+        static List<string> default_file_paths = new List<string> {  @"\\ucsdhc-varis2\radonc$\UnzipFiles" };
         static bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;
@@ -129,7 +129,23 @@ namespace UnzipCSharp
                 }
 
                 string file_paths_file = Path.Join(".", $"FilePaths.txt");
-                if (File.Exists(file_paths_file))
+                if (!File.Exists(file_paths_file))
+                {
+                    try
+                    {
+                        StreamWriter fid = new(file_paths_file);
+                        foreach (string file_path in default_file_paths)
+                        {
+                            fid.WriteLine($"{file_path}");
+                        }
+                        fid.Close();
+                    }
+                    catch
+                    {
+                        int x = 5;
+                    }
+                }
+                else
                 {
                     try
                     {
